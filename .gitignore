@@ -1,0 +1,7 @@
+*.pyc
+htmlcov
+.coverage
+coverage.xml
+.sla_report_automation_dev.env
+node_modules
+ui/tests/coverage

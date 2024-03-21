@@ -1,0 +1,9 @@
+{
+  "name": "SLA_Report_Automation",
+  "description": "Automate SLA Reports to check and create Jira tickets for requests running in the extension and those not running in the extension",
+  "version": "0.1.0",
+  "audience": ["vendor", "distributor", "reseller"],
+  "readme_url": "https://example.com/README.md",
+  "changelog_url": "https://example.com/CHANGELOG.md",
+  "icon": "googleExtensionBaseline"
+}
