@@ -117,7 +117,7 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
         # Convert the list to JSON and URL encode it
         encoded_request = quote(json.dumps(requestardos_list))
         return RedirectResponse(
-            url=f'https://srvc-1859-1074-dev.ext.conn.rocks/guest/test?param1={encoded_request}')
+            url=f'https://srvc-1859-1074.ext.conn.rocks/guest/test?param1={encoded_request}')
 
     @router.get(
         '/requests/',
