@@ -53,13 +53,12 @@ router.include_router(shared_router)
 ])
 @web_app(router)
 @account_settings_page('SLA Report settings', '/static/settings.html')
-@module_pages ('Report Generation', '/static/index.html')
+@module_pages('Report Generation', '/static/index.html')
 
 class SlaReportAutomationWebApplication(WebApplicationBase):
-
     @unauthorized()
-    @router.get('/test',response_class=HTMLResponse)
-    def test_ito(self,request:Request):
+    @router.get('/test', response_class=HTMLResponse)
+    def test_ito(self, request: Request):
         encoded_param1 = request.query_params.get('param1')
 
         if encoded_param1:
@@ -101,52 +100,24 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
                 """
         return html_content
 
-    @unauthorized()
-    @router.get('/wizardtest', response_class=HTMLResponse)
-    def my_endpoint(self, api_token: str, request: list):
-
-        html_content = f"""
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <title>My Wizard hola aqui</title>
-            </head>
-            <body>
-                <p>t</p>
-                <h1>Here is my api: {api_token}</h1>
-           <ul>
-            """
-        for r in request:
-            html_content += f"<li>{r['id']}</li>"
-            html_content += f"<li>{r['status']}</li>"
-            html_content += f"<li>{r['created']}</li>"
-
-        html_content += """
-            </ul>
-            </body>
-            </html>
-            """
-        return html_content
-
     @router.get('/wizardo', response_class=HTMLResponse)
-    def my_endpoint_test(self,config: dict = Depends(get_config) ,
+    def my_endpoint_test(self, config: dict = Depends(get_config),
                          client: ConnectClient = Depends(get_installation_client)):
-        api_token = config['API_TOKEN']
-        requestardos = client.requests.all().values_list('id','status','created')
+        # api_token = config['API_TOKEN']
+        requestardos = client.requests.all().values_list('id', 'status', 'created')
 
-        #for n in requestardos:
-         #   print(n)
         # Convert requestardos to a list of dictionaries
         requestardos_list = []
         for r in requestardos:
             requestardos_list.append({
                 'id': r['id'],
                 'status': r['status'],
-                'created': r['created']
+                'created': r['created'],
             })
         # Convert the list to JSON and URL encode it
-        encoded_requestardos = quote(json.dumps(requestardos_list))
-        return RedirectResponse(url=f'https://srvc-1859-1074-dev.ext.conn.rocks/guest/test?param1={encoded_requestardos}')
+        encoded_request = quote(json.dumps(requestardos_list))
+        return RedirectResponse(
+            url=f'https://srvc-1859-1074-dev.ext.conn.rocks/guest/test?param1={encoded_request}')
 
     @router.get(
         '/requests/',
@@ -160,7 +131,7 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
         return [
             Requests(**requests)
             for requests in client.requests.all().values_list(
-                'id', 'status','created','asset','events','asset_environment'
+                'id', 'status', 'created', 'asset', 'events', 'asset_environment',
             )
         ]
 
@@ -201,17 +172,16 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
 
     @router.post(
         '/generateExcel',
-        summary='Generate Excel Report'
+        summary='Generate Excel Report',
     )
     def generate_report(self,
             client: ConnectClient = Depends(get_installation_client),
-            config: dict = Depends(get_config)
+            config: dict = Depends(get_config),
     ):
         api_token = config['API_TOKEN']
         pr_request_dict_list = []  # Initialize an empty list for dictionaries
 
-        pr_request = client.requests.filter(status='pending').all().values_list(
-            'id', 'status')
+        pr_request = client.requests.filter(status='pending').all().values_list('id', 'status',)
         for row in pr_request:
             message = client.conversations[row['id']].messages.filter(type='message').all().values_list(
                 'id', 'type', 'text', 'events',
@@ -257,8 +227,6 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
         report_generation = report.Report.convert_list_jira_info(grouped_dict,api_token)
 
         report.Report.generate_excel(report_generation)
-        print(report_generation)
-        print("HOLA VEMOSS EL TIPO",type(report_generation))
         for item in report_generation:
             id_list = item['ID'].split(', ')
             jira_tickets_str = item.get('JIRA TICKET', "")
@@ -270,9 +238,9 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
                 for jira_ticket in jira_tickets:
 
                     # Replace conversation_id with the actual conversation ID from your data
-                    messages = client.conversations[id_str].messages.filter(type='message').all().values_list(
-                        'id', 'type', 'text', 'events',
-                    )
+                    messages = (client.conversations[id_str]
+                    .messages.filter(type='message')
+                    .all().values_list('id', 'type', 'text', 'events'))
 
                     for message_value in messages:
                         text_message = message_value['text']
@@ -300,14 +268,13 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
             id: str,
             client: ConnectClient = Depends(get_installation_client),
     ):
-        #logging.debug(SlaReportAutomationWebApplication.generate_report(self,client))
         return [
             Messages(**conversations)
-            for conversations in client.conversations[id].messages.filter(type='message').all().values_list(
-                'id', 'type', 'text','events'
+            for conversations in
+            client.conversations[id].messages.filter(type='message').all().values_list(
+                'id', 'type', 'text', 'events',
             )
         ]
-
 
     @router.get(
         '/marketplaces',
