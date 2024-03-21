@@ -13,10 +13,10 @@ readme = "./README.md"
 "webapp" = "connect_ext.webapp:SlaReportAutomationWebApplication"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.8,<4"
 connect-eaas-core = ">=26.13,<=31"
 python-levenshtein = "^0.23.0"
-pandas = "^2.2.0"
+pandas = "1.4.4"
 
 [tool.poetry.dev-dependencies]
 pytest = ">=6.1.2,<8"
