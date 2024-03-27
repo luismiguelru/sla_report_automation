@@ -101,6 +101,7 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
         return html_content
 
     @router.get('/wizardo', response_class=HTMLResponse)
+    #injectt config & client & installation
     def my_endpoint_test(self, config: dict = Depends(get_config),
                          client: ConnectClient = Depends(get_installation_client)):
         # api_token = config['API_TOKEN']
@@ -117,7 +118,7 @@ class SlaReportAutomationWebApplication(WebApplicationBase):
         # Convert the list to JSON and URL encode it
         encoded_request = quote(json.dumps(requestardos_list))
         return RedirectResponse(
-            url=f'https://srvc-1859-1074.ext.conn.rocks/guest/test?param1={encoded_request}')
+            url=f'https://srvc-1859-1074-ein-4355-7359-3864.ext.conn.rocks/guest/test?param1={encoded_request}')
 
     @router.get(
         '/requests/',
