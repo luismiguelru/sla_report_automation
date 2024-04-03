@@ -38,12 +38,13 @@ All rights reserved.
                 .then(data => {
                     // Parse the returned URL from the response
                     const redirectUrl = data.trim();
-                    // Redirect to the URL
-                    window.open(redirectUrl, '_blank');
+                    // update the URL of opened window/tab
+                    popup.location.href = redirectUrl;
                 })
                 .catch(error => {
                     // Handle errors
                     console.error('There was an error!', error);
+                    popup.close();
                 });
         });
   </script>
