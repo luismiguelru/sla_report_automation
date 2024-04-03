@@ -10,6 +10,44 @@ All rights reserved.
     <title>
         <%= htmlWebpackPlugin.options.title %>
     </title>
+    <style>
+        /* Styles for the modal */
+        .modal {
+            display: none; /* Hide the modal by default */
+            position: fixed; /* Position the modal */
+            z-index: 1; /* Make sure it appears on top of other content */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scrolling if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with transparency */
+        }
+
+        /* Modal content */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* Center modal vertically and horizontally */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Set the width */
+        }
+
+        /* Close button */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -30,27 +68,55 @@ All rights reserved.
             </div>
         </main-card>
     </div>
-<script>
-        document.getElementById("myButton").addEventListener("click", function() {
-                    // Open a blank window/tab
-            const popup = window.open('', '_blank');
 
-            // Send a request to the endpoint when the button is clicked
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="modalContent"></p>
+        </div>
+    </div>
+
+    <script>
+        // Get the modal element
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myButton");
+
+        // Get the close button
+        var closeBtn = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x) or outside of the modal, close the modal
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // When the user clicks the button, call the fetch function
+        btn.onclick = function() {
             fetch('/api/wizardo')
                 .then(response => response.text())
                 .then(data => {
                     // Parse the returned URL from the response
                     const redirectUrl = data.trim();
-                    // Set the URL of the opened window/tab
-                    popup.location.href = redirectUrl;
+                    // Set the content of the modal to the fetched URL
+                    document.getElementById("modalContent").innerText = redirectUrl;
+                    // Display the modal
+                    modal.style.display = "block";
                 })
                 .catch(error => {
                     // Handle errors
                     console.error('There was an error!', error);
-                    popup.close(); // Close the window/tab in case of an error
                 });
-        });
-  </script>
+        }
+    </script>
 </body>
 
 </html>
