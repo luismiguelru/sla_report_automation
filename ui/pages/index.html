@@ -32,18 +32,22 @@ All rights reserved.
     </div>
 <script>
         document.getElementById("myButton").addEventListener("click", function() {
+                    // Open a blank window/tab
+            const popup = window.open('', '_blank');
+
             // Send a request to the endpoint when the button is clicked
             fetch('/api/wizardo')
                 .then(response => response.text())
                 .then(data => {
                     // Parse the returned URL from the response
                     const redirectUrl = data.trim();
-                    // Redirect to the fetched URL
-                    window.location.href = redirectUrl;
+                    // Set the URL of the opened window/tab
+                    popup.location.href = redirectUrl;
                 })
                 .catch(error => {
                     // Handle errors
                     console.error('There was an error!', error);
+                    popup.close(); // Close the window/tab in case of an error
                 });
         });
   </script>
