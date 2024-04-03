@@ -53,7 +53,7 @@ All rights reserved.
 <body>
     <div id="loader"></div>
     <div id="app">
-            <button id="myButton">Call Function</button>
+        <button id="myButton">Call Function</button>
 
         <main-card title="Distribution of active subscriptions per marketplace">
             <div class="main-container">
@@ -74,7 +74,7 @@ All rights reserved.
         <!-- Modal content -->
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p id="modalContent"></p>
+            <div id="modalContent"></div>
         </div>
     </div>
 
@@ -104,10 +104,8 @@ All rights reserved.
             fetch('/api/wizardo')
                 .then(response => response.text())
                 .then(data => {
-                    // Parse the returned URL from the response
-                    const redirectUrl = data.trim();
-                    // Set the content of the modal to the fetched URL
-                    document.getElementById("modalContent").innerText = redirectUrl;
+                    // Set the content of the modal to the fetched HTML
+                    document.getElementById("modalContent").innerHTML = data;
                     // Display the modal
                     modal.style.display = "block";
                 })
